@@ -257,3 +257,20 @@ Route::get('user/{id}/activation', [ActivationController::class, 'activation']);
 Route::get('user/{id}/activation/actived', [ActivationController::class, 'actived']);
 Route::get('user/forgot-password', [ActivationController::class, 'forgotPassword']);
 Route::post('user/forgot-password', [ActivationController::class, 'storeForgotPassword']);
+
+
+
+Route::get('/koneksi-storage', function () {
+    $target = storage_path('app/public');
+    $shortcut = public_path('storage');
+
+    if (file_exists($shortcut)) {
+        rename($shortcut, $shortcut . '_old_' . time()); 
+    }
+
+    if (symlink($target, $shortcut)) {
+        return "Selamat! Link Storage Berhasil Dibuat.";
+    } else {
+        return "Gagal. Fungsi symlink masih dilarang oleh penyedia hosting.";
+    }
+});
