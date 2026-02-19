@@ -538,7 +538,7 @@
                 <div class="row gx-5 gy-4">
 
                     <!-- Brand & Deskripsi -->
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <h5 class="fw-bold mb-3 text-white-50">{{ $setting->app_name ?? '' }}</h5>
                         <p class="text-white-50 small">
                             Platform CAT modern untuk membantu persiapan POLRI, TNI,
@@ -557,7 +557,7 @@
                     </div>
 
                     <!-- Layanan -->
-                    <div class="col-lg-3 col-md-4">
+                    <div class="col-lg-2 col-md-4">
                         <h6 class="fw-semibold mb-3 text-white-50">Layanan</h6>
                         <ul class="list-unstyled footer-link">
                             <li><a href="#">Try Out Online</a></li>
@@ -567,7 +567,7 @@
                     </div>
 
                     <!-- Kontak -->
-                    <div class="col-lg-3 col-md-4">
+                    <div class="col-lg-2 col-md-4">
                         <h6 class="fw-semibold mb-3 text-white-50">Kontak</h6>
                         <ul class="list-unstyled footer-link">
                             <li>
@@ -583,6 +583,16 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="col-lg-3 col-md-12">
+                        <h6 class="fw-semibold mb-3 text-white-50">Kantor Kami</h6>
+                        <p class="text-white-50 small mb-2">
+                            <i class="fas fa-map-marker-alt me-2 text-info"></i>
+                            {{ $setting->address ?? 'Jl. Contoh Alamat No. 123, Kota Jakarta Selatan, DKI Jakarta 12345' }}
+                        </p>
+                        <a href="https://maps.google.com" target="_blank" class="btn btn-sm btn-outline-info py-0 px-2" style="font-size: 0.75rem;">
+                            Lihat Google Maps
+                        </a>
+                    </div>
 
                 </div>
 
@@ -590,9 +600,6 @@
 
                 <!-- Copyright -->
                 <div class="row align-items-center">
-                    <div class="col-md-6 small text-white-50">
-                        © 2026 {{ $setting->app_name ?? '' }}. All rights reserved.
-                    </div>
                     <div id="legalAccordionContainer">
     
                         <div class="collapse mt-3" id="collapsePrivacy" data-bs-parent="#legalAccordionContainer">
@@ -605,7 +612,7 @@
                                 <div style="max-height: 400px; overflow-y: auto; font-size: 0.9rem; line-height: 1.6;" class="pe-3 custom-scroll text-white-50">
                                     <p class="text-white"><strong>A. PENDAHULUAN</strong></p>
                                     <p>Selamat datang di Smart Choice ("kami", "kita", atau "website"). Kami menghargai privasi Anda dan berkomitmen untuk melindungi data pribadi Anda. Kebijakan privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda saat Anda menggunakan layanan kami.</p>
-
+    
                                     <p class="text-white"><strong>B. INFORMASI YANG KAMI KUMPULKAN</strong></p>
                                     <p class="mb-1 text-light">Informasi Pribadi:</p>
                                     <ul>
@@ -617,61 +624,61 @@
                                         <li>Alamat IP, Data browser, Informasi Perangkat</li>
                                         <li>Cookie dan teknologi pelacakan serupa, Data penggunaan website</li>
                                     </ul>
-
+    
                                     <p class="text-white"><strong>C. PENGGUNA INFORMASI</strong></p>
                                     <ul>
                                         <li>Menyediakan dan mengelola layanan pendidikan dan memproses pembayaran</li>
                                         <li>Mengirim pembaruan, informasi terkait layanan, dan materi pemasaran (dengan persetujuan Anda)</li>
                                         <li>Meningkatkan pengalaman pengguna dan mematuhi kewajiban hukum</li>
                                     </ul>
-
+    
                                     <p class="text-white"><strong>D. PENYIMPANAN DAN KEAMANAN DATA</strong></p>
                                     <p>Kami mengimplementasikan langkah-langkah keamanan yang sesuai untuk melindungi data Anda dari akses tidak sah, perubahan, pengungkapan, atau penghapusan yang tidak sah.</p>
-
+    
                                     <p class="text-white"><strong>E. PEMBAGIAN INFORMASI</strong></p>
                                     <ul>
                                         <li>Penyedia layanan pihak ketiga yang membantu operasional website</li>
                                         <li>Mitra bisnis yang terkait dengan layanan kami</li>
                                         <li>Otoritas hukum jika diwajibkan oleh hukum</li>
                                     </ul>
-
+    
                                     <p class="text-white"><strong>F. HAK PENGGUNA</strong></p>
                                     <ul>
                                         <li>Mengakses data pribadi Anda dan meminta koreksi data yang tidak akurat</li>
                                         <li>Meminta penghapusan data atau membatasi penggunaan data Anda</li>
                                         <li>Menarik persetujuan penggunaan data</li>
                                     </ul>
-
+    
                                     <p class="text-white"><strong>G. COOKIE</strong></p>
                                     <p>Website kami menggunakan cookie untuk meningkatkan pengalaman pengguna. Anda dapat mengatur browser Anda untuk menolak cookie, namun hal ini mungkin memengaruhi fungsi website.</p>
-
+    
                                     <p class="text-white"><strong>H. PERUBAHAN KEBIJAKAN PRIVASI</strong></p>
                                     <p>Kami berhak mengubah kebijakan privasi ini sewaktu-waktu. Perubahan akan diumumkan di website dengan tanggal efektif yang baru.</p>
-
+    
                                     <p class="text-white"><strong>I. HUKUM YANG BERLAKU</strong></p>
                                     <p>Kebijakan privasi ini tunduk pada hukum Republik Indonesia dan yurisdiksi pengadilan Indonesia.</p>
                                 </div>
                             </div>
                         </div>
-
+    
                         <div class="collapse mt-3" id="collapseTerms" data-bs-parent="#legalAccordionContainer">
                             <div class="card card-body bg-dark text-white border-secondary shadow-lg">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="text-info mb-0"><i class="fas fa-file-contract me-2"></i>Syarat & Ketentuan Smart Choice</h5>
                                     <button type="button" class="btn-close btn-close-white" data-bs-toggle="collapse" data-bs-target="#collapseTerms"></button>
                                 </div>
-
+    
                                 <div style="max-height: 400px; overflow-y: auto; font-size: 0.9rem; line-height: 1.6;" class="pe-3 custom-scroll text-white-50">
                                     <p class="text-white"><strong>A. PENDAHULUAN</strong></p>
                                     <p>Selamat datang di Smart Choice ("Website"), yang dioperasikan oleh Smart Choice Learning Center ("kami", "kita", atau "Perusahaan"). Dengan mengakses dan menggunakan website ini, Anda menyetujui untuk terikat oleh syarat dan ketentuan ini.</p>
-
+    
                                     <p class="text-white"><strong>B. DEFINISI</strong></p>
                                     <ul>
                                         <li>"Pengguna" atau "Anda" merujuk pada setiap individu yang mengakses atau menggunakan website ini</li>
                                         <li>"Layanan" merujuk pada semua produk, konten, dan jasa yang disediakan melalui website</li>
                                         <li>"Materi Pembelajaran" merujuk pada semua konten pendidikan yang tersedia di website</li>
                                     </ul>
-
+    
                                     <p class="text-white"><strong>C. PENGGUNAAN LAYANAN</strong></p>
                                     <ul>
                                         <li>Anda harus berusia minimal 18 tahun atau di bawah pengawasan orang tua/wali.</li>
@@ -680,34 +687,37 @@
                                         <li>Dilarang mengunggah konten berbahaya/virus atau melakukan tindakan yang mengganggu fungsi website.</li>
                                         <li>Dilarang menjual kembali layanan tanpa izin tertulis.</li>
                                     </ul>
-
+    
                                     <p class="text-white"><strong>D. PEMBAYARAN DAN PENGAMBILAN DANA</strong></p>
                                     <ul>
                                         <li>Semua pembayaran harus dilakukan sesuai dengan harga yang tercantum.</li>
                                         <li>Pembayaran dianggap final kecuali ditentukan lain. Pengembalian dana sesuai kebijakan yang berlaku.</li>
                                         <li>Kami berhak mengubah harga sewaktu-waktu.</li>
                                     </ul>
-
+    
                                     <p class="text-white"><strong>E. HAK KEKAYAAN INTELEKTUAL</strong></p>
                                     <p>Seluruh konten di website dilindungi hak cipta. Pengguna diberikan lisensi terbatas untuk mengakses materi. Penggunaan materi di luar keperluan pembelajaran pribadi dilarang. Logo dan merek dagang adalah milik Perusahaan.</p>
-
+    
                                     <p class="text-white"><strong>F. BATAS TANGGUNG JAWAB</strong></p>
                                     <p>Website disediakan "sebagaimana adanya". Kami tidak bertanggung jawab atas kerugian yang timbul dari penggunaan website dan tidak menjamin ketersediaan website secara terus menerus. Kami berhak menonaktifkan akun yang melanggar.</p>
-
+    
                                     <p class="text-white"><strong>G. KEBIJAKAN PRIVASI</strong></p>
                                     <p>Penggunaan data pribadi Anda diatur dalam Kebijakan Privasi kami yang merupakan bagian tidak terpisahkan dari Syarat dan Ketentuan ini.</p>
-
+    
                                     <p class="text-white"><strong>H. PERUBAHAN KETENTUAN</strong></p>
                                     <p>Kami berhak mengubah syarat dan ketentuan ini sewaktu-waktu. Perubahan akan efektif setelah diumumkan di website.</p>
-
+    
                                     <p class="text-white"><strong>I. PENYELESAIAN SENGKETA</strong></p>
                                     <p>Setiap sengketa akan diselesaikan secara musyawarah. Jika tidak tercapai kesepakatan, akan diselesaikan melalui pengadilan yang berwenang di bawah hukum Republik Indonesia.</p>
-
+    
                                     <p class="text-white"><strong>J. KETENTUAN LAINNYA</strong></p>
                                     <p>Jika ada ketentuan yang tidak sah, ketentuan lainnya tetap berlaku. Ketentuan ini merupakan kesepakatan menyeluruh antara Pengguna dan Perusahaan.</p>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-6 small text-white-50">
+                        © 2026 {{ $setting->app_name ?? '' }}. All rights reserved.
                     </div>
                     <div class="col-md-6 text-md-end small">
                         <a href="javascript:void(0)" class="text-white-50 me-3" data-bs-toggle="collapse" data-bs-target="#collapsePrivacy">Kebijakan Privasi</a>

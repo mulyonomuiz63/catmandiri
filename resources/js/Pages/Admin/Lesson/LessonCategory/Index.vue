@@ -94,7 +94,6 @@
                                         <div v-if="lessonCategory.thumbnail">
                                             <img
                                                 v-bind:src="
-                                                    '/storage/upload_files/lesson_categories/' +
                                                     lessonCategory.thumbnail
                                                 "
                                                 style="width: 90px"
