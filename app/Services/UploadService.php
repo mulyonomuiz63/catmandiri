@@ -21,14 +21,7 @@ class UploadService
     {
         if ($file->isValid()) {
             $set_name = Carbon::now()->format('ymdhs').'_'.$file->getClientOriginalName();
-            // return ($file->storeAs($path, $set_name, $disk)) ? $set_name : false;
-             // simpan file
-            $storedPath = $file->storeAs($path, $set_name, $disk);
-
-            if ($storedPath) {
-                // KEMBALIKAN URL ABSOLUT (INI KUNCI)
-                return asset('storage/' . $storedPath);
-            }
+            return ($file->storeAs($path, $set_name, $disk)) ? $set_name : false;
         }
         return false;
     }

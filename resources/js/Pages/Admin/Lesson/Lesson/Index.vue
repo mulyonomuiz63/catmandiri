@@ -92,7 +92,7 @@
                                         <div v-if="lesson.thumbnail">
                                             <img
                                                 v-bind:src="
-                                                    lesson.thumbnail
+                                                    '/storage/upload_files/lessons/' + lesson.thumbnail
                                                 "
                                                 style="width: 90px"
                                             />

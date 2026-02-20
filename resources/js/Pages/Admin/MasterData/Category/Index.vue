@@ -90,7 +90,7 @@
                                         <div v-if="category.thumbnail">
                                             <img
                                                 v-bind:src="
-                                                    category.thumbnail
+                                                    '/storage/upload_files/categories/' + category.thumbnail
                                                 "
                                                 style="width: 90px"
                                             />
