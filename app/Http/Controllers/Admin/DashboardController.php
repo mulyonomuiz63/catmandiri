@@ -49,43 +49,43 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function upload(Request $request)
-    {
-        $fileName = Carbon::now()->format('Ymdhis').$request->file('file')->getClientOriginalName();
-        
-        // Simpan file
-        $path = $request->file('file')->storeAs('upload_files/questions', $fileName, 'public');
-        
-        // GUNAKAN asset() untuk menghasilkan URL absolut
-        return response()->json(['location' => asset("/storage/$path")]);
-    }
-
-    public function uploadAnnouncement(Request $request)
-    {
-        // Pastikan ada file yang diupload
-            $file = $request->file('file');
-            
-            // Membuat nama file unik
-            $fileName = Carbon::now()->format('Ymdhis') . '_' . $file->getClientOriginalName();
-            // Hilangkan tanda '/' di depan path agar tidak terjadi double slash
-            $path = $file->storeAs('upload_files/announcements', $fileName, 'public');
-            
-            // RETURN URL ABSOLUT menggunakan asset()
-            return response()->json([
-                'location' => asset("/storage/$path")
-            ]);
-    }
     // public function upload(Request $request)
     // {
     //     $fileName = Carbon::now()->format('Ymdhis').$request->file('file')->getClientOriginalName();
-    //     $path = $request->file('file')->storeAs('/upload_files/questions', $fileName, 'public');
-    //     return response()->json(['location' => "/storage/$path"]);
+        
+    //     // Simpan file
+    //     $path = $request->file('file')->storeAs('upload_files/questions', $fileName, 'public');
+        
+    //     // GUNAKAN asset() untuk menghasilkan URL absolut
+    //     return response()->json(['location' => asset("/storage/$path")]);
     // }
 
     // public function uploadAnnouncement(Request $request)
     // {
-    //     $fileName = Carbon::now()->format('Ymdhis').$request->file('file')->getClientOriginalName();
-    //     $path = $request->file('file')->storeAs('/upload_files/announcements', $fileName, 'public');
-    //     return response()->json(['location' => "/storage/$path"]);
+    //     // Pastikan ada file yang diupload
+    //         $file = $request->file('file');
+            
+    //         // Membuat nama file unik
+    //         $fileName = Carbon::now()->format('Ymdhis') . '_' . $file->getClientOriginalName();
+    //         // Hilangkan tanda '/' di depan path agar tidak terjadi double slash
+    //         $path = $file->storeAs('upload_files/announcements', $fileName, 'public');
+            
+    //         // RETURN URL ABSOLUT menggunakan asset()
+    //         return response()->json([
+    //             'location' => asset("/storage/$path")
+    //         ]);
     // }
+    public function upload(Request $request)
+    {
+        $fileName = Carbon::now()->format('Ymdhis').$request->file('file')->getClientOriginalName();
+        $path = $request->file('file')->storeAs('/upload_files/questions', $fileName, 'public');
+        return response()->json(['location' => "/storage/$path"]);
+    }
+
+    public function uploadAnnouncement(Request $request)
+    {
+        $fileName = Carbon::now()->format('Ymdhis').$request->file('file')->getClientOriginalName();
+        $path = $request->file('file')->storeAs('/upload_files/announcements', $fileName, 'public');
+        return response()->json(['location' => "/storage/$path"]);
+    }
 }
