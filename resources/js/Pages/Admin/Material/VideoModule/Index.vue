@@ -74,65 +74,67 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody v-if="videoModules && videoModules.data">
                                 <tr
                                     v-for="(module, index) in videoModules.data"
-                                    :key="index"
+                                    :key="module.id || index"
                                 >
                                     <td>
                                         {{
-                                            ++index +
-                                            (videoModules.current_page - 1) *
-                                                videoModules.per_page
+                                            (videoModules.current_page - 1) * videoModules.per_page + (index + 1)
                                         }}
                                     </td>
                                     <td>
-                                        <span class="badge bg-primary">{{
-                                            module.category.name
-                                        }}</span>
+                                        <span class="badge bg-primary" v-if="module.category">
+                                            {{ module.category.name }}
+                                        </span>
+                                        <span v-else class="text-muted">-</span>
                                     </td>
                                     <td>{{ module.title }}</td>
                                     <td>
-                                        <a
-                                            :href="module.link"
-                                            target="_blank"
-                                            >{{ module.link }}</a
-                                        >
+                                        <a :href="module.link" target="_blank">{{ module.link }}</a>
                                     </td>
                                     <td>
-                                        <span
-                                            v-if="module.member_categories"
-                                            v-for="member_categories in module.member_categories"
-                                            class="badge bg-success m-1"
-                                        >
-                                            {{ member_categories }}
-                                        </span>
-                                        <span v-else class="badge bg-danger"
-                                            >Untuk Seluruh Kategori Member</span
-                                        >
+                                        <template v-if="module.member_categories && module.member_categories.length > 0">
+                                            <span
+                                                v-for="(member, idx) in module.member_categories"
+                                                :key="idx"
+                                                class="badge bg-success m-1"
+                                            >
+                                                {{ member }}
+                                            </span>
+                                        </template>
+                                        <span v-else class="badge bg-danger">Untuk Seluruh Kategori Member</span>
                                     </td>
                                     <td>
                                         <div class="d-flex order-actions">
                                             <Link
                                                 :href="`/admin/video-modules/${module.id}/edit`"
                                                 class="ms-1"
-                                                ><i class="bx bxs-edit"></i
-                                            ></Link>
+                                            >
+                                                <i class="bx bxs-edit"></i>
+                                            </Link>
                                             <a
                                                 href="#"
-                                                @click.prevent="
-                                                    destroy(module.id)
-                                                "
+                                                @click.prevent="destroy(module.id)"
                                                 class="ms-1"
-                                                ><i class="bx bxs-trash"></i
-                                            ></a>
+                                            >
+                                                <i class="bx bxs-trash"></i>
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr v-if="!videoModules.data.length">
+
+                                <tr v-if="videoModules.data.length === 0">
                                     <td align="center" colspan="6">
                                         Data Tidak Tersedia
                                     </td>
+                                </tr>
+                            </tbody>
+
+                            <tbody v-else>
+                                <tr>
+                                    <td align="center" colspan="6">Memuat data...</td>
                                 </tr>
                             </tbody>
                         </table>

@@ -77,58 +77,80 @@
                             <tbody>
                                 <tr
                                     v-for="(module, index) in modules.data"
-                                    :key="index"
+                                    :key="module.id"
                                 >
                                     <td>
                                         {{
-                                            ++index +
                                             (modules.current_page - 1) *
-                                                modules.per_page
+                                                modules.per_page +
+                                            index +
+                                            1
                                         }}
                                     </td>
+
                                     <td>
-                                        <span class="badge bg-primary">{{
-                                            module.category.name
-                                        }}</span>
+                                        <span
+                                            v-if="module.category"
+                                            class="badge bg-primary"
+                                        >
+                                            {{ module.category.name }}
+                                        </span>
                                     </td>
+
                                     <td>{{ module.title }}</td>
+
                                     <td>
                                         <a
                                             :href="module.link"
                                             target="_blank"
-                                            >{{ module.link }}</a
+                                            class="text-truncate d-inline-block"
+                                            style="max-width: 200px"
                                         >
+                                            {{ module.link }}
+                                        </a>
                                     </td>
+
                                     <td>
-                                        <span
-                                            v-if="module.member_categories"
-                                            v-for="member_categories in module.member_categories"
-                                            class="badge bg-success m-1"
+                                        <template
+                                            v-if="
+                                                module.member_categories &&
+                                                module.member_categories
+                                                    .length > 0
+                                            "
                                         >
-                                            {{ member_categories }}
+                                            <span
+                                                v-for="(
+                                                    member, idx
+                                                ) in module.member_categories"
+                                                :key="idx"
+                                                class="badge bg-success m-1"
+                                            >
+                                                {{ member }}
+                                            </span>
+                                        </template>
+                                        <span v-else class="badge bg-danger">
+                                            Untuk Seluruh Kategori Member
                                         </span>
-                                        <span v-else class="badge bg-danger"
-                                            >Untuk Seluruh Kategori Member</span
-                                        >
                                     </td>
+
                                     <td>
                                         <div class="d-flex order-actions">
                                             <Link
                                                 :href="`/admin/modules/${module.id}/edit`"
-                                                class="ms-1"
-                                                ><i class="bx bxs-edit"></i
-                                            ></Link>
-                                            <a
-                                                href="#"
-                                                @click.prevent="
-                                                    destroy(module.id)
-                                                "
-                                                class="ms-1"
-                                                ><i class="bx bxs-trash"></i
-                                            ></a>
+                                                class="btn btn-sm btn-light-warning"
+                                            >
+                                                <i class="bx bxs-edit"></i>
+                                            </Link>
+                                            <button
+                                                @click="destroy(module.id)"
+                                                class="btn btn-sm btn-light-danger ms-2"
+                                            >
+                                                <i class="bx bxs-trash"></i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
+
                                 <tr v-if="!modules.data.length">
                                     <td align="center" colspan="6">
                                         Data Tidak Tersedia
@@ -187,7 +209,7 @@ export default {
     setup() {
         // define state search
         const search = ref(
-            "" || new URL(document.location).searchParams.get("search")
+            "" || new URL(document.location).searchParams.get("search"),
         );
 
         // define method search
