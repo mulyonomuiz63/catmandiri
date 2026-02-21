@@ -1,2 +1,13 @@
+# Berikan akses ke semua mesin pencari (Google, Bing, dll)
 User-agent: *
-Disallow:
+
+# Izinkan akses ke halaman utama dan publik
+Allow: /
+
+# Larang akses ke halaman sistem dan panel admin agar tidak muncul di pencarian
+Disallow: /vendor/
+Disallow: /storage/framework/
+Disallow: /cgi-bin/
+
+# Beritahu Google lokasi Peta Situs (Sitemap) Anda
+Sitemap: https://smartchoicereborn.com/sitemap.xml
