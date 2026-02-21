@@ -257,7 +257,7 @@
                                         @click="showModalEndExam = true"
                                         class="btn btn-danger btn-md border-0 shadow w-100"
                                     >
-                                        Akhiri Try Out
+                                        Akhiri Ujian
                                     </button>
                                     <button
                                         v-else
@@ -279,7 +279,7 @@
                                         @click="showModalEndExam = true"
                                         class="btn btn-danger btn-md border-0 shadow w-100"
                                     >
-                                        Akhiri Try Out
+                                        Akhiri Ujian
                                     </button>
                                     <button
                                         v-if="
@@ -390,7 +390,7 @@
                                 @click="showModalEndExam = true"
                                 class="btn btn-danger btn-md border-0 shadow w-100"
                             >
-                                Akhiri Try Out
+                                Akhiri Ujian
                             </button>
                             <button
                                 v-else
@@ -410,7 +410,7 @@
                                 @click="showModalEndExam = true"
                                 class="btn btn-danger btn-md border-0 shadow w-100"
                             >
-                                Akhiri Try Out
+                                Akhiri Ujian
                             </button>
                             <button
                                 v-if="
@@ -431,7 +431,7 @@
     </div>
     <!--end page wrapper -->
 
-    <!-- modal akhiri Try Out -->
+    <!-- modal Akhiri Ujian -->
     <div
         v-if="showModalEndExam"
         class="modal fade"
@@ -444,11 +444,11 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Akhiri Try Out ?</h5>
+                    <h5 class="modal-title">Akhiri Ujian ?</h5>
                 </div>
                 <div class="modal-body">
-                    Setelah mengakhiri Try Out, Anda tidak dapat kembali ke Try
-                    Out ini lagi. Yakin akan mengakhiri Try Out?
+                    Setelah mengAkhiri Ujian, Anda tidak dapat kembali ke Try
+                    Out ini lagi. Yakin akan mengAkhiri Ujian?
                 </div>
                 <div class="modal-footer">
                     <button

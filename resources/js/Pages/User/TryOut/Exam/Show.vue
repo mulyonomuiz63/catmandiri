@@ -231,8 +231,7 @@
                                                 >
                                                     <Link
                                                         :href="`/user/exams/${exam.id}/exam-start`"
-                                                        class="btn btn-sm btn-primary"
-                                                        style="width: 16vh"
+                                                        class="btn btn-sm btn-primary m-1"
                                                         >Mulai Kerjakan</Link
                                                     >
                                                 </div>
@@ -245,8 +244,7 @@
                                                 >
                                                     <Link
                                                         :href="`/user/exams/${exam.id}/exam-start`"
-                                                        class="btn btn-sm btn-warning"
-                                                        style="width: 19vh"
+                                                        class="btn btn-sm btn-warning m-1"
                                                         >Lanjut
                                                         Mengerjakan</Link
                                                     >
@@ -277,11 +275,7 @@
                                                     &nbsp;
                                                     <Link
                                                         :href="`/user/grades/${grade.id}`"
-                                                        class="btn btn-sm btn-primary"
-                                                        style="
-                                                            width: 16vh;
-                                                            margin: 6px;
-                                                        "
+                                                        class="btn btn-sm btn-primary m-1"
                                                         >Hasil</Link
                                                     >
                                                     &nbsp;
@@ -291,11 +285,7 @@
                                                             exam.show_answer_discussion ==
                                                             1
                                                         "
-                                                        class="btn btn-sm btn-primary"
-                                                        style="
-                                                            width: 16vh;
-                                                            margin: 6px;
-                                                        "
+                                                        class="btn btn-sm btn-primary m-1"
                                                         >Pembahasan</Link
                                                     >
                                                 </div>

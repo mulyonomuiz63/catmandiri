@@ -75,8 +75,7 @@
                         <div class="container px-5">
                             <div class="row gx-5 justify-content-center">
                                 <div class="col-xl-8 col-lg-10 text-center mb-4" data-aos="fade">
-                                    <h1 class="page-header-ui-title text-white">Platform Sistem Computer Assisted Test
-                                        (CAT)</h1>
+                                    <h1 class="page-header-ui-title text-white">Platform Sistem Computer Assisted Test</h1>
                                     <p class="page-header-ui-text text-white">Membantu casis POLRI, TNI, CPNS dan
                                         Kedinasan dalam berlatih agar lebih siap menghadapi tes yang sebenarnya</p>
                                     <a class="btn btn-primary fw-500 me-2" href="{{ route('login') }}">Mulai
@@ -124,7 +123,7 @@
                                     <i data-feather="code"></i></div>
                                 <h3>Dokumentasi Lengkap</h3>
                                 <p class="mb-0">Semua tata letak, bagian halaman, komponen, dan utilitas sepenuhnya
-                                    tercakup dalam dokumen lengkap agar memudahkan user ketika menggunakan aplikasi CAT
+                                    tercakup dalam dokumen lengkap agar memudahkan user ketika menggunakan aplikasi 
                                     {{ $setting->app_name ?? '' }}</p>
                             </div>
                         </div>
@@ -212,7 +211,7 @@
                                 <div class="text-center">
                                     <div class="text-xs text-uppercase-expanded text-primary mb-2">Gambaran Aplikasi
                                     </div>
-                                    <h2 class="mb-5">Gambaran Aplikasi CAT {{ $setting->app_name ?? '' }}</h2>
+                                    <h2 class="mb-5">Gambaran Aplikasi  {{ $setting->app_name ?? '' }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -413,7 +412,7 @@
                                             class="fas fa-question"></i></div>
                                     <div class="ms-4">
                                         <h5 class="text-white">Apa itu platform {{ $setting->app_name ?? '' }} ?</h5>
-                                        <p class="text-white-50">{{ $setting->app_name ?? '' }} merupakan sistem CAT
+                                        <p class="text-white-50">{{ $setting->app_name ?? '' }} merupakan sistem 
                                             yang bertujuan Membantu casis POLRI, TNI, CPNS dan Kedinasan dalam berlatih
                                             agar lebih siap menghadapi tes yang sebenarnya</p>
                                     </div>
@@ -541,7 +540,7 @@
                     <div class="col-lg-3">
                         <h5 class="fw-bold mb-3 text-white-50">{{ $setting->app_name ?? '' }}</h5>
                         <p class="text-white-50 small">
-                            Platform CAT modern untuk membantu persiapan POLRI, TNI,
+                            Platform  modern untuk membantu persiapan POLRI, TNI,
                             CPNS dan Kedinasan secara efektif dan terarah.
                         </p>
                     </div>

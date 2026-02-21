@@ -40,11 +40,7 @@
                                     <h4 class="mb-0 text-white">
                                         <span class="badge"
                                             >No.
-                                            {{
-                                                questionLists[indexPage][
-                                                    "navigation_order"
-                                                ]
-                                            }}</span
+                                            {{ indexPage + 1 }}</span
                                         >
                                     </h4>
                                 </div>
@@ -102,7 +98,7 @@
                                                         getMyAnswer(
                                                             questionLists[
                                                                 indexPage
-                                                            ]['question_id']
+                                                            ]['question_id'],
                                                         )
                                                     "
                                                     @click="
@@ -110,7 +106,7 @@
                                                             questionLists[
                                                                 indexPage
                                                             ]['question_id'],
-                                                            answer
+                                                            answer,
                                                         )
                                                     "
                                                     class="btn btn-primary text-white"
@@ -124,7 +120,7 @@
                                                             questionLists[
                                                                 indexPage
                                                             ]['question_id'],
-                                                            answer
+                                                            answer,
                                                         )
                                                     "
                                                     class="btn btn-outline-primary w-100 no-click-effect"
@@ -189,13 +185,13 @@
                                 v-if="
                                     answer ==
                                     getMyAnswer(
-                                        questionLists[indexPage]['question_id']
+                                        questionLists[indexPage]['question_id'],
                                     )
                                 "
                                 @click="
                                     submitAnswer(
                                         questionLists[indexPage]['question_id'],
-                                        answer
+                                        answer,
                                     )
                                 "
                                 class="btn btn-secondary text-dark px-lg-5 px-md-5 mb-1 mx-1 rounded-3 no-click-effect-section"
@@ -208,7 +204,7 @@
                                 @click="
                                     submitAnswer(
                                         questionLists[indexPage]['question_id'],
-                                        answer
+                                        answer,
                                     )
                                 "
                                 class="btn btn-secondary px-lg-5 px-md-5 mb-1 rounded-3 mx-1 text-dark no-click-effect-section"
@@ -257,7 +253,7 @@
                                         @click="showModalEndExam = true"
                                         class="btn btn-danger btn-md border-0 shadow w-100"
                                     >
-                                        Akhiri Try Out
+                                        Akhiri Ujian
                                     </button>
                                     <button
                                         v-else
@@ -279,7 +275,7 @@
                                         @click="showModalEndExam = true"
                                         class="btn btn-danger btn-md border-0 shadow w-100"
                                     >
-                                        Akhiri Try Out
+                                        Akhiri Ujian
                                     </button>
                                     <button
                                         v-if="
@@ -336,11 +332,11 @@
                                                 font-size: 11px;
                                                 font-weight: 500;
                                             "
-                                            >{{
-                                                question.navigation_order
-                                            }}</span
                                         >
+                                            {{ index + 1 }}
+                                        </span>
                                     </button>
+
                                     <button
                                         @click="clickQuestion(index)"
                                         v-if="
@@ -355,11 +351,11 @@
                                                 font-size: 11px;
                                                 font-weight: 500;
                                             "
-                                            >{{
-                                                question.navigation_order
-                                            }}</span
                                         >
+                                            {{ index + 1 }}
+                                        </span>
                                     </button>
+
                                     <button
                                         @click="clickQuestion(index)"
                                         v-if="
@@ -374,10 +370,9 @@
                                                 font-size: 11px;
                                                 font-weight: 500;
                                             "
-                                            >{{
-                                                question.navigation_order
-                                            }}</span
                                         >
+                                            {{ index + 1 }}
+                                        </span>
                                     </button>
                                 </div>
                             </div>
@@ -390,7 +385,7 @@
                                 @click="showModalEndExam = true"
                                 class="btn btn-danger btn-md border-0 shadow w-100"
                             >
-                                Akhiri Try Out
+                                Akhri Ujian
                             </button>
                             <button
                                 v-else
@@ -410,7 +405,7 @@
                                 @click="showModalEndExam = true"
                                 class="btn btn-danger btn-md border-0 shadow w-100"
                             >
-                                Akhiri Try Out
+                                Akhri Ujian
                             </button>
                             <button
                                 v-if="
@@ -431,7 +426,7 @@
     </div>
     <!--end page wrapper -->
 
-    <!-- modal akhiri Try Out -->
+    <!-- modal Akhri Ujian -->
     <div
         v-if="showModalEndExam"
         class="modal fade"
@@ -444,11 +439,11 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Akhiri Try Out ?</h5>
+                    <h5 class="modal-title">Akhri Ujian ?</h5>
                 </div>
                 <div class="modal-body">
-                    Setelah mengakhiri Try Out, Anda tidak dapat kembali ke Try
-                    Out ini lagi. Yakin akan mengakhiri Try Out?
+                    Setelah mengAkhri Ujian, Anda tidak dapat kembali ke Try
+                    Out ini lagi. Yakin akan mengAkhri Ujian?
                 </div>
                 <div class="modal-footer">
                     <button
@@ -581,7 +576,7 @@ export default {
         let recaptchaScript = document.createElement("script");
         recaptchaScript.setAttribute(
             "src",
-            "/assets/js/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+            "/assets/js/MathJax.js?config=TeX-AMS-MML_HTMLorMML",
         );
         document.head.appendChild(recaptchaScript);
 
@@ -632,7 +627,7 @@ export default {
             let recaptchaScript = document.createElement("script");
             recaptchaScript.setAttribute(
                 "src",
-                "/assets/js/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+                "/assets/js/MathJax.js?config=TeX-AMS-MML_HTMLorMML",
             );
             document.head.appendChild(recaptchaScript);
 
@@ -692,7 +687,7 @@ export default {
                                 onSuccess: () => {
                                     location.reload();
                                 },
-                            }
+                            },
                         );
                     }
                 });
@@ -701,7 +696,7 @@ export default {
 
         const getMyAnswer = (question_id) => {
             const item = myAnswers.find(
-                (item) => item.question_id === question_id
+                (item) => item.question_id === question_id,
             );
             return item ? item.answer : 0;
         };
@@ -711,7 +706,7 @@ export default {
         const submitAnswer = (question_id, answer) => {
             const value = { question_id: question_id, answer: answer };
             const index = myAnswers.findIndex(
-                (item) => item.question_id === value.question_id
+                (item) => item.question_id === value.question_id,
             );
 
             if (index !== -1) {
@@ -821,13 +816,13 @@ export default {
                                 });
                             }
                         },
-                    }
+                    },
                 );
             } else {
                 Inertia.get(
                     `/user/exams/${props.exam.id}/grades/${
                         props.grade.id
-                    }/sections/${props.section + 1}?nextsection=1`
+                    }/sections/${props.section + 1}?nextsection=1`,
                 );
                 localStorage.removeItem("indexPage");
                 Swal.fire({
@@ -865,7 +860,7 @@ export default {
                                 params: {
                                     token: token,
                                 },
-                            }
+                            },
                         )
                         .then((response) => {
                             if (response.data.success == true) {
@@ -899,7 +894,7 @@ export default {
                         .catch((error) => {
                             console.error("Request failed:", error);
                             Swal.showValidationMessage(
-                                `Request failed: ${error}`
+                                `Request failed: ${error}`,
                             );
                         });
                 },
