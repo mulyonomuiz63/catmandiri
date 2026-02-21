@@ -57,7 +57,7 @@ class DashboardController extends Controller
         $path = $request->file('file')->storeAs('upload_files/questions', $fileName, 'public');
         
         // GUNAKAN asset() untuk menghasilkan URL absolut
-        return response()->json(['location' => asset("storage/$path")]);
+        return response()->json(['location' => asset("/storage/$path")]);
     }
 
     public function uploadAnnouncement(Request $request)
@@ -72,7 +72,7 @@ class DashboardController extends Controller
             
             // RETURN URL ABSOLUT menggunakan asset()
             return response()->json([
-                'location' => asset("storage/$path")
+                'location' => asset("/storage/$path")
             ]);
     }
     // public function upload(Request $request)
