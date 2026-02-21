@@ -63,6 +63,7 @@ use App\Http\Controllers\User\Material\VideoModuleController as UserVideoModuleC
 use App\Http\Controllers\ActivationController;
 use App\Http\Controllers\Admin\MasterData\MemberCategoryController;
 use App\Http\Controllers\TestingController;
+use App\Http\Controllers\SitemapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,6 +75,8 @@ use App\Http\Controllers\TestingController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 Route::get('clear', function () {
     Artisan::call('config:clear');

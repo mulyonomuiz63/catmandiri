@@ -8,11 +8,12 @@
     <meta name="description"
         content="Membantu casis POLRI, TNI, CPNS dan Kedinasan dalam berlatih agar lebih siap menghadapi tes yang sebenarnya" />
     <meta name="author" content="{{ $setting->app_name ?? '' }}" />
+    <meta name="robots" content="index, follow">
+    <meta name="google-site-verification" content="Q05kIXdC7hnNTWXO0wux-gk6NC-1AYhCATIDugZWVso" />
     <title>Home</title>
     <link rel="icon" href="{{ asset('assets/images/logo.png') }}" type="image/png" />
     <link href="{{ asset('assets/landing-page/theme_1/css/styles.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/landing-page/theme_1/css/aos.css') }}" />
-    <link rel="icon" type="image/x-icon" href="assets/img/favicon.png" />
     <script data-search-pseudo-elements="" defer="" src="{{ asset('assets/landing-page/theme_1/js/all.min.js') }}"
         crossorigin="anonymous"></script>
     <script src="{{ asset('assets/landing-page/theme_1/js/feather.min.js') }}" crossorigin="anonymous"></script>
