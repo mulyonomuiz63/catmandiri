@@ -68,6 +68,8 @@
                                     base_url: '/tinymce',
                                     suffix: '.min',
                                     automatic_uploads: true,
+                                    relative_urls: false,  
+                                    convert_urls: false,
                                     height: 400,
                                     external_plugins: {
                                         tiny_mce_wiris:

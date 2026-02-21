@@ -157,6 +157,8 @@
                                     suffix: '.min',
                                     images_upload_url: '/upload',
                                     automatic_uploads: true,
+                                    relative_urls: false,  
+                                    convert_urls: false,
                                     height: 400,
                                     plugins: [
                                         'advlist',

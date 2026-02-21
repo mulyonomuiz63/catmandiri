@@ -204,6 +204,8 @@
                                 :init="{
                                     images_upload_url: '/upload',
                                     automatic_uploads: true,
+                                    relative_urls: false,  
+                                    convert_urls: false,
                                     license_key: 'gpl',
                                     base_url: '/tinymce',
                                     suffix: '.min',
