@@ -302,7 +302,7 @@
                                             <td>:</td>
                                             <img
                                                 v-bind:src="
-                                                    payment_confirmation.file
+                                                    '/storage/upload_files/payment_confirmation/' + payment_confirmation.file
                                                 "
                                                 style="width: 300px"
                                             />

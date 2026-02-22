@@ -157,7 +157,9 @@
                                             type="text"
                                             class="form-control"
                                             :value="
-                                                voucher.active_period + ' Bulan'
+                                                voucher.period_type === 'month' 
+                                                ? voucher.active_period + ' Bulan' 
+                                                : voucher.active_period + ' Hari'
                                             "
                                             disabled
                                             style="background-color: #fff"

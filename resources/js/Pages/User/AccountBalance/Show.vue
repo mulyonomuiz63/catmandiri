@@ -400,7 +400,7 @@
                                     <div class="col-sm-9">
                                         <img
                                             v-bind:src="
-                                                payment_confirmation.file
+                                                '/storage/upload_files/payment_confirmation/' + payment_confirmation.file
                                             "
                                             style="width: 300px"
                                         />
@@ -432,7 +432,7 @@
                                                     <center>
                                                         <img
                                                             v-bind:src="
-                                                                bank.image
+                                                                '/storage/upload_files/banks/' + bank.image
                                                             "
                                                             style="
                                                                 width: 125px;
@@ -441,7 +441,7 @@
                                                         />
                                                     </center>
                                                 </div>
-                                                <div class="card-body">
+                                                <div class="card-body mt-2">
                                                     <center>
                                                         <h5 class="card-title">
                                                             {{ bank.bank_name }}

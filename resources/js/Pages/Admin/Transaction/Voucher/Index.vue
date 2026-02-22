@@ -111,25 +111,12 @@
                                             )
                                         }}
                                     </td>
-                                    <td>
-                                        <!-- <span v-if="voucher.member_categories" v-for="member_categories in voucher.member_categories" class="badge bg-success m-1">
-                                            {{  member_categories  }}
-                                        </span> -->
+                                    <td>                                        
                                         <span
                                             v-if="voucher.member_categories"
-                                            v-for="member_categories in voucher.member_categories"
-                                            :class="[
-                                                'badge',
-                                                'm-1',
-                                                {
-                                                    'bg-info':
-                                                        member_categories ===
-                                                        'Basic Member',
-                                                    'bg-warning':
-                                                        member_categories ===
-                                                        'Premium Member',
-                                                },
-                                            ]"
+                                            v-for="(member_categories, index) in voucher.member_categories"
+                                            :key="index"
+                                            :class="['badge', 'm-1', getDynamicColor(index)]"
                                         >
                                             {{ member_categories }}
                                         </span>
@@ -276,6 +263,21 @@ export default {
             let val = (value / 1).toFixed(2).replace(".", ",");
             return "Rp." + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         },
+        getDynamicColor(index) {
+            const colors = [
+                'bg-primary',   // Biru
+                'bg-success',   // Hijau
+                'bg-danger',    // Merah
+                'bg-warning',   // Kuning
+                'bg-info',      // Biru Muda
+                'bg-dark',      // Hitam/Gelap
+                'bg-secondary'  // Abu-abu
+            ];
+            
+            // Menggunakan modulo (%) agar jika index lebih dari jumlah warna, 
+            // warnanya akan berulang kembali ke awal.
+            return colors[index % colors.length];
+        }
     },
 };
 </script>

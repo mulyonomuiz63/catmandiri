@@ -244,38 +244,32 @@
                                         }}
                                     </td>
                                     <td>
-                                        <span
-                                            class="badge bg-warning"
-                                            v-if="
-                                                accountBalance.transaction_status ==
-                                                'pending'
-                                            "
-                                            >Pending</span
-                                        >
-                                        <span
-                                            class="badge bg-primary"
-                                            v-if="
-                                                accountBalance.transaction_status ==
-                                                'paid'
-                                            "
-                                            >Paid</span
-                                        >
-                                        <span
-                                            class="badge bg-danger"
-                                            v-if="
-                                                accountBalance.transaction_status ==
-                                                'failed'
-                                            "
-                                            >Failed</span
-                                        >
-                                        <span
-                                            class="badge bg-success"
-                                            v-if="
-                                                accountBalance.transaction_status ==
-                                                'done'
-                                            "
-                                            >Done</span
-                                        >
+                                        <span v-if="accountBalance.payment_method == 'manual_transfer' && accountBalance.transaction_status == 'pending'">
+                                            <a :href="'/user/account-balances/' + accountBalance.id" class="badge bg-warning text-decoration-none">
+                                                <i class="fas fa-upload me-1"></i> Upload Bukti Pembayaran
+                                            </a>
+                                        </span>
+
+                                        <span v-else-if="accountBalance.payment_method == 'automatic_transfer_midtrans' && accountBalance.transaction_status == 'pending'">
+                                            <a :href="'/user/account-balances/' + accountBalance.id" class="badge bg-primary text-decoration-none">
+                                                <i class="fas fa-credit-card me-1"></i> Bayar Sekarang
+                                            </a>
+                                        </span>
+
+                                        <template v-else>
+                                            <span class="badge bg-success" v-if="accountBalance.transaction_status == 'paid'">
+                                                Terbayar
+                                            </span>
+                                            <span class="badge bg-danger" v-if="accountBalance.transaction_status == 'failed'">
+                                                Gagal
+                                            </span>
+                                            <span class="badge bg-info" v-if="accountBalance.transaction_status == 'done'">
+                                                Selesai
+                                            </span>
+                                            <span class="badge bg-secondary" v-if="accountBalance.transaction_status == 'pending'">
+                                                Menunggu
+                                            </span>
+                                        </template>
                                     </td>
                                 </tr>
                             </tbody>
