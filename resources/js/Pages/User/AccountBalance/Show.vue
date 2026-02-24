@@ -1,477 +1,196 @@
 <template>
     <Head>
         <title>
-            {{ $page.props.setting.app_name ?? "Atur Setting Terlebih Dahulu" }}
-            - Transaksi
+            {{ $page.props.setting.app_name ?? "Atur Setting Terlebih Dahulu" }} - Transaksi
         </title>
     </Head>
-    <!--start page wrapper -->
+
     <div class="page-wrapper">
         <div class="page-content">
-            <!--breadcrumb-->
-            <div
-                class="page-breadcrumb d-none d-sm-flex align-items-center mb-3"
-            >
+            <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-4">
                 <div class="breadcrumb-title pe-3">Transaksi</div>
                 <div class="ps-3">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0 p-0">
                             <li class="breadcrumb-item">
-                                <a href="javascript:;"
-                                    ><i class="bx bx-home-alt"></i
-                                ></a>
+                                <a href="javascript:;"><i class="bx bx-home-alt"></i></a>
                             </li>
-                            <li
-                                class="breadcrumb-item active"
-                                aria-current="page"
-                            >
-                                Detail Transaksi
-                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Detail Transaksi</li>
                         </ol>
                     </nav>
                 </div>
+                <div class="ms-auto">
+                    <Link :href="`/user/account-balances`" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                        <i class="bx bx-arrow-back"></i> Kembali
+                    </Link>
+                </div>
             </div>
-            <!--end breadcrumb-->
 
             <div class="row">
-                <div class="col-lg-12">
-                    <div
-                        v-if="$page.props.session.failed"
-                        class="alert alert-danger border-0 alert-dismissible fade show"
-                    >
-                        <div v-html="$page.props.session.failed"></div>
-                        <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="alert"
-                            aria-label="Close"
-                        ></button>
+                <div class="col-12" v-if="$page.props.session.failed || $page.props.session.error || $page.props.session.success">
+                    <div v-if="$page.props.session.failed || $page.props.session.error" class="alert alert-danger border-0 shadow-sm">
+                        <div v-html="$page.props.session.failed || $page.props.session.error"></div>
                     </div>
-                    <div
-                        v-if="$page.props.session.error"
-                        class="alert alert-danger border-0 alert-dismissible fade show"
-                    >
-                        <div v-html="$page.props.session.error"></div>
-                        <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="alert"
-                            aria-label="Close"
-                        ></button>
-                    </div>
-                    <div
-                        v-if="$page.props.session.success"
-                        class="alert alert-success border-0 alert-dismissible fade show"
-                    >
+                    <div v-if="$page.props.session.success" class="alert alert-success border-0 shadow-sm">
                         <div v-html="$page.props.session.success"></div>
-                        <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="alert"
-                            aria-label="Close"
-                        ></button>
                     </div>
                 </div>
-                <div class="col-lg-12">
-                    <div
-                        class="card border-top border-0 border-3 border-primary"
-                    >
-                        <div class="card-header">
-                            <div class="d-lg-flex align-items-center">
-                                <div class="ms-auto">
-                                    <Link
-                                        v-if="
-                                            transaction.transaction_status ==
-                                                'pending' &&
-                                            transaction.payment_method ==
-                                                'manual_transfer'
-                                        "
-                                        :href="`/user/account-balances/${transaction.id}/payment-confirmations`"
-                                        class="btn btn-danger btn-sm mt-lg-0 mx-1"
-                                        >Konfirmasi Pembayaran</Link
-                                    >
-                                    <Link
-                                        :href="`/user/account-balances`"
-                                        class="btn btn-primary btn-sm mt-lg-0"
-                                    >
-                                        Kembali
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
+
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm" style="border-radius: 15px;">
                         <div class="card-body p-4">
-                            <h5 class="mb-3">Data Pembeli</h5>
-                            <div class="row mb-3">
-                                <label class="col-sm-3 col-form-label"
-                                    >Nama Lengkap</label
-                                >
-                                <div class="col-sm-9">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        :value="transaction.user.name"
-                                        disabled
-                                        style="background-color: #fff"
-                                    />
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div>
+                                    <h5 class="fw-bold mb-0">Informasi Transaksi</h5>
+                                    <p class="text-muted small">Detail pembayaran dan data pembeli</p>
                                 </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-sm-3 col-form-label"
-                                    >Email</label
-                                >
-                                <div class="col-sm-9">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        :value="transaction.user.email"
-                                        disabled
-                                        style="background-color: #fff"
-                                    />
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-sm-3 col-form-label"
-                                    >Nomor Telepon (Whatsapp)</label
-                                >
-                                <div class="col-sm-9">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        :value="
-                                            transaction.user.student &&
-                                            transaction.user.student
-                                                .phone_number
-                                                ? transaction.user.student
-                                                      .phone_number
-                                                : '-'
-                                        "
-                                        disabled
-                                        style="background-color: #fff"
-                                    />
+                                <div class="text-end">
+                                    <span :class="statusClass(transaction.transaction_status)">
+                                        {{ statusLabel(transaction.transaction_status) }}
+                                    </span>
                                 </div>
                             </div>
 
-                            <h5 class="mb-3">Detail Transaksi</h5>
-                            <div class="row mb-3">
-                                <label class="col-sm-3 col-form-label"
-                                    >Kode Transaksi</label
-                                >
-                                <div class="col-sm-9">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        :value="transaction.code"
-                                        disabled
-                                        style="background-color: #fff"
-                                    />
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-sm-3 col-form-label"
-                                    >Tanggal Transaksi</label
-                                >
-                                <div class="col-sm-9">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        :value="transaction.created_at"
-                                        disabled
-                                        style="background-color: #fff"
-                                    />
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-sm-3 col-form-label"
-                                    >Deskripsi Transaksi</label
-                                >
-                                <div class="col-sm-9">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        :value="transaction.description"
-                                        disabled
-                                        style="background-color: #fff"
-                                    />
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-sm-3 col-form-label"
-                                    >Metode Pembayaran</label
-                                >
-                                <div class="col-sm-9">
-                                    <select
-                                        class="form-select"
-                                        disabled
-                                        style="background-color: #fff"
-                                    >
-                                        <option
-                                            value="manual_transfer"
-                                            :selected="
-                                                transaction.payment_method ==
-                                                'manual_transfer'
-                                            "
-                                        >
-                                            Transfer Manual (Konfirmasi
-                                            Pembayaran)
-                                        </option>
-                                        <option
-                                            value="automatic_transfer_midtrans"
-                                            :selected="
-                                                transaction.payment_method ==
-                                                'automatic_transfer_midtrans'
-                                            "
-                                        >
-                                            Transfer Otomatis
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-sm-3 col-form-label"
-                                    >Total Transaksi</label
-                                >
-                                <div class="col-sm-9">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        :value="
-                                            formatPrice(
-                                                transaction.top_up_balance
-                                            )
-                                        "
-                                        disabled
-                                        style="background-color: #fff"
-                                    />
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-sm-3 col-form-label"
-                                    >Status Transaksi</label
-                                >
-                                <div class="col-sm-9">
-                                    <span
-                                        class="fw-bold"
-                                        v-if="
-                                            transaction.transaction_status ==
-                                            'pending'
-                                        "
-                                        >Pending - Belum melakukan
-                                        pembayaran</span
-                                    >
-                                    <span
-                                        class="fw-bold"
-                                        v-if="
-                                            transaction.transaction_status ==
-                                            'paid'
-                                        "
-                                        >Telah melakukan pembayaran</span
-                                    >
-                                    <span
-                                        class="fw-bold"
-                                        v-if="
-                                            transaction.transaction_status ==
-                                            'failed'
-                                        "
-                                        >Transaksi Gagal</span
-                                    >
-                                    <span
-                                        class="fw-bold"
-                                        v-if="
-                                            transaction.transaction_status ==
-                                            'done'
-                                        "
-                                        >Transaksi Selesai</span
-                                    >
-                                    <span
-                                        class="fw-bold"
-                                        v-if="
-                                            transaction.transaction_status ==
-                                            'expired'
-                                        "
-                                        >Transaksi Kadaluarsa</span
-                                    >
-                                </div>
-                            </div>
-                            <div
-                                class="row mb-3"
-                                v-if="
-                                    transaction.payment_method ==
-                                        'automatic_transfer_midtrans' &&
-                                    transaction.transaction_status == 'pending'
-                                "
-                            >
-                                <label class="col-sm-3 col-form-label"
-                                    >Action</label
-                                >
-                                <div class="col-sm-9">
-                                    <button
-                                        @click="pay"
-                                        class="btn btn-primary btn-sm"
-                                    >
-                                        Bayar Transaksi Sekarang
-                                    </button>
-                                </div>
-                            </div>
-                            <div
-                                v-if="
-                                    transaction.payment_method ==
-                                        'manual_transfer' &&
-                                    payment_confirmation !== null
-                                "
-                            >
-                                <h5 class="mb-3">Data Konfirmasi Pembayaran</h5>
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label"
-                                        >Nama Pengirim Transfer</label
-                                    >
-                                    <div class="col-sm-9">
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            :value="
-                                                payment_confirmation.rekening_name
-                                            "
-                                            disabled
-                                            style="background-color: #fff"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label"
-                                        >Di Transfer Ke Rekening</label
-                                    >
-                                    <div class="col-sm-9">
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            :value="
-                                                payment_confirmation.bank
-                                                    .bank_name +
-                                                ' - ' +
-                                                payment_confirmation.bank
-                                                    .rekening_number +
-                                                ' - ' +
-                                                payment_confirmation.bank
-                                                    .rekening_name
-                                            "
-                                            disabled
-                                            style="background-color: #fff"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label"
-                                        >Tanggal Transfer</label
-                                    >
-                                    <div class="col-sm-9">
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            :value="
-                                                payment_confirmation.transfer_date
-                                            "
-                                            disabled
-                                            style="background-color: #fff"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label"
-                                        >Jumlah Transfer</label
-                                    >
-                                    <div class="col-sm-9">
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            :value="
-                                                formatPrice(
-                                                    payment_confirmation.total_payment
-                                                )
-                                            "
-                                            disabled
-                                            style="background-color: #fff"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label"
-                                        >Bukti Transfer</label
-                                    >
-                                    <div class="col-sm-9">
-                                        <img
-                                            v-bind:src="
-                                                '/storage/upload_files/payment_confirmation/' + payment_confirmation.file
-                                            "
-                                            style="width: 300px"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div
-                                class="row"
-                                v-if="
-                                    transaction.payment_method ==
-                                        'manual_transfer' &&
-                                    transaction.transaction_status == 'pending'
-                                "
-                            >
-                                <div class="col-lg-12">
-                                    <h6 class="text-center">
-                                        Silakan lakukan pembayaran melalui
-                                        rekening berikut ini dan lakukan
-                                        konfirmasi
-                                    </h6>
-                                    <br />
-                                    <div
-                                        class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-3"
-                                    >
-                                        <div class="col" v-for="bank in banks">
-                                            <div class="card">
-                                                <div style="height: 75px">
-                                                    <center>
-                                                        <img
-                                                            v-bind:src="
-                                                                '/storage/upload_files/banks/' + bank.image
-                                                            "
-                                                            style="
-                                                                width: 125px;
-                                                                margin-top: 20px;
-                                                            "
-                                                        />
-                                                    </center>
-                                                </div>
-                                                <div class="card-body mt-2">
-                                                    <center>
-                                                        <h5 class="card-title">
-                                                            {{ bank.bank_name }}
-                                                        </h5>
-                                                        <p class="card-text">
-                                                            {{
-                                                                bank.rekening_number
-                                                            }}
-                                                        </p>
-                                                        <p class="card-text">
-                                                            <b>{{
-                                                                bank.rekening_name
-                                                            }}</b>
-                                                        </p>
-                                                    </center>
-                                                </div>
-                                            </div>
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <label class="text-muted small text-uppercase fw-bold">Data Pembeli</label>
+                                    <div class="d-flex align-items-center mt-2">
+                                        <div class="bg-light rounded-circle p-2 me-3">
+                                            <i class="bx bx-user fs-4 text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <p class="mb-0 fw-bold">{{ transaction.user.name }}</p>
+                                            <p class="mb-0 text-muted small">{{ transaction.user.email }}</p>
+                                            <p class="mb-0 text-muted small">{{ transaction.user.student?.phone_number ?? '-' }}</p>
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="col-md-6">
+                                    <label class="text-muted small text-uppercase fw-bold">Metode Pembayaran</label>
+                                    <div class="d-flex align-items-center mt-2">
+                                        <div class="bg-light rounded-circle p-2 me-3">
+                                            <i class="bx bx-credit-card fs-4 text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <p class="mb-0 fw-bold">
+                                                {{ transaction.payment_method == 'manual_transfer' ? 'Transfer Manual' : 'Transfer Otomatis (Midtrans)' }}
+                                            </p>
+                                            <p class="mb-0 text-muted small">ID: {{ transaction.code }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12"><hr class="opacity-50"></div>
+
+                                <div class="col-12">
+                                    <label class="text-muted small text-uppercase fw-bold mb-3">Ringkasan Biaya</label>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>{{ transaction.description }}</span>
+                                        <span class="fw-bold">{{ formatPrice(transaction.top_up_balance) }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between py-3 border-top mt-3">
+                                        <span class="fw-bold fs-5">Total Bayar</span>
+                                        <span class="fw-bold fs-5 text-primary">{{ formatPrice(transaction.top_up_balance) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-3 border-top text-end" v-if="transaction.transaction_status == 'pending'">
+                                <Link v-if="transaction.payment_method == 'manual_transfer'"
+                                    :href="`/user/account-balances/${transaction.id}/payment-confirmations`"
+                                    class="btn btn-danger px-4 rounded-pill">
+                                    <i class="bx bx-check-shield"></i> Konfirmasi Pembayaran
+                                </Link>
+                                <button v-if="transaction.payment_method == 'automatic_transfer_midtrans'"
+                                    @click="pay"
+                                    class="btn btn-primary px-4 rounded-pill">
+                                    <i class="bx bx-wallet"></i> Bayar Sekarang
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm mt-4" v-if="payment_confirmation" style="border-radius: 15px;">
+                        <div class="card-body p-4">
+                            <h6 class="fw-bold mb-3 text-uppercase small">Bukti Pembayaran Anda</h6>
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <img :src="'/storage/upload_files/payment_confirmation/' + payment_confirmation.file" 
+                                         class="img-fluid rounded shadow-sm border" alt="Bukti Transfer">
+                                </div>
+                                <div class="col-md-8">
+                                    <table class="table table-sm table-borderless mb-0 mt-3 mt-md-0">
+                                        <tr>
+                                            <td class="text-muted">Pengirim:</td>
+                                            <td class="fw-bold">{{ payment_confirmation.rekening_name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">Bank Tujuan:</td>
+                                            <td>{{ payment_confirmation.bank.bank_name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">Tanggal:</td>
+                                            <td>{{ payment_confirmation.transfer_date }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4" v-if="transaction.payment_method == 'manual_transfer' && transaction.transaction_status == 'pending'">
+                    <div class="card border-0 shadow-sm bg-primary text-white" style="border-radius: 15px; background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);">
+                        <div class="card-body p-4 text-center">
+                            <i class="bx bx-info-circle fs-1 mb-2"></i>
+                            <h5 class="fw-bold text-light">Instruksi Pembayaran</h5>
+                            <p class="small opacity-75">Silakan transfer tepat sesuai nominal ke salah satu rekening di bawah ini:</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card border-0 shadow-sm mt-3" v-for="bank in banks" :key="bank.id" style="border-radius: 15px;">
+                        <div class="card-body p-3">
+                            <div class="d-flex align-items-center">
+                                <img :src="'/storage/upload_files/banks/' + bank.image" style="width: 60px; height: 40px; object-fit: contain;" class="me-3">
+                                <div>
+                                    <h6 class="mb-0 fw-bold">{{ bank.bank_name }}</h6>
+                                    <p class="mb-0 text-primary fw-bold fs-5">{{ bank.rekening_number }}</p>
+                                    <p class="mb-0 text-muted small">{{ bank.rekening_name }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!--end row-->
         </div>
     </div>
-    <!--end page wrapper -->
 </template>
+
+<script setup>
+// Tambahkan helper untuk badge warna
+const statusClass = (status) => {
+    const classes = {
+        'pending': 'badge bg-warning text-dark px-3 py-2 rounded-pill',
+        'paid': 'badge bg-info text-white px-3 py-2 rounded-pill',
+        'done': 'badge bg-success text-white px-3 py-2 rounded-pill',
+        'failed': 'badge bg-danger text-white px-3 py-2 rounded-pill',
+        'expired': 'badge bg-secondary text-white px-3 py-2 rounded-pill'
+    };
+    return classes[status] || 'badge bg-secondary px-3 py-2 rounded-pill';
+};
+
+const statusLabel = (status) => {
+    const labels = {
+        'pending': 'Menunggu Pembayaran',
+        'paid': 'Sudah Dibayar',
+        'done': 'Selesai',
+        'failed': 'Gagal',
+        'expired': 'Kadaluarsa'
+    };
+    return labels[status] || status;
+};
+</script>
 
 <script>
 //import layout admin
