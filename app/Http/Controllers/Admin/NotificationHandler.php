@@ -26,7 +26,7 @@ class NotificationHandler extends Controller
 
             $notification = json_decode($payload);
 
-            $signatureKey = hash("sha512", $notification->order_id. $notification->status_code. $notification->gross_amount. config('services.midtrans.serverKey'));
+            $signatureKey = hash("sha512", $notification->order_id.  $notification->gross_amount. config('services.midtrans.serverKey'));
 
             if ($notification->signature_key != $signatureKey) {
                 return response(['message' => 'Invalid signature'], 403);
