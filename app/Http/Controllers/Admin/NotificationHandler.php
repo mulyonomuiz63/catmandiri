@@ -28,9 +28,9 @@ class NotificationHandler extends Controller
 
             $signatureKey = hash("sha512", $notification->order_id. $notification->status_code. $notification->gross_amount. config('services.midtrans.serverKey'));
 
-            // if ($notification->signature_key != $signatureKey) {
-            //     return response(['message' => 'Invalid signature'], 403);
-            // }
+            if ($notification->signature_key != $signatureKey) {
+                return response(['message' => 'Invalid signature'], 403);
+            }
 
             $transaction  = $notification->transaction_status;
             $type = $notification->payment_type;
