@@ -13,7 +13,7 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0 p-0">
                             <li class="breadcrumb-item">
-                                <a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+                                <Link href="/user/dashboard"><i class="bx bx-home-alt"></i></Link>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">Detail Transaksi</li>
                         </ol>
@@ -110,7 +110,7 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <div class="card border-0 shadow-sm mt-4" v-if="payment_confirmation" style="border-radius: 15px;">
                         <div class="card-body p-4">
                             <h6 class="fw-bold mb-3 text-uppercase small">Bukti Pembayaran Anda</h6>
@@ -127,7 +127,7 @@
                                         </tr>
                                         <tr>
                                             <td class="text-muted">Bank Tujuan:</td>
-                                            <td>{{ payment_confirmation.bank.bank_name }}</td>
+                                            <td>{{ payment_confirmation.bank?.bank_name }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-muted">Tanggal:</td>
@@ -167,60 +167,15 @@
     </div>
 </template>
 
-<script setup>
-// Tambahkan helper untuk badge warna
-const statusClass = (status) => {
-    const classes = {
-        'pending': 'badge bg-warning text-dark px-3 py-2 rounded-pill',
-        'paid': 'badge bg-info text-white px-3 py-2 rounded-pill',
-        'done': 'badge bg-success text-white px-3 py-2 rounded-pill',
-        'failed': 'badge bg-danger text-white px-3 py-2 rounded-pill',
-        'expired': 'badge bg-secondary text-white px-3 py-2 rounded-pill'
-    };
-    return classes[status] || 'badge bg-secondary px-3 py-2 rounded-pill';
-};
-
-const statusLabel = (status) => {
-    const labels = {
-        'pending': 'Menunggu Pembayaran',
-        'paid': 'Sudah Dibayar',
-        'done': 'Selesai',
-        'failed': 'Gagal',
-        'expired': 'Kadaluarsa'
-    };
-    return labels[status] || status;
-};
-</script>
-
 <script>
-//import layout admin
 import LayoutAdmin from "../../../Layouts/Layout.vue";
-
-// import Link
-import { Link } from "@inertiajs/vue3";
-
-//import reactive
+import { Link, Head, router as Inertia } from "@inertiajs/vue3";
 import { reactive } from "vue";
-
-// import Head from Inertia
-import { Head } from "@inertiajs/vue3";
-
-// import Swal
 import Swal from "sweetalert2";
 
-import { router as Inertia } from "@inertiajs/vue3";
-
 export default {
-    // layout
     layout: LayoutAdmin,
-
-    // register components
-    components: {
-        Link,
-        Head,
-    },
-
-    //props
+    components: { Link, Head },
     props: {
         errors: Object,
         transaction: Object,
@@ -232,31 +187,36 @@ export default {
             payment_method: "",
         });
 
-        // submit method
-        const submit = () => {
-            // send data to server
-            Inertia.post(
-                `/user/vouchers/${props.voucher.id}/buy`,
-                {
-                    // data
-                    payment_method: form.payment_method,
-                },
-                {
-                    onSuccess: () => {
-                        //show success alert
-                        Swal.fire({
-                            title: "Success!",
-                            text: "Silakan Lakukan Pembayaran",
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1000,
-                        });
-                    },
-                }
-            );
+        // Helper: Class Status
+        const statusClass = (status) => {
+            const classes = {
+                'pending': 'badge bg-warning text-dark px-3 py-2 rounded-pill',
+                'paid': 'badge bg-info text-white px-3 py-2 rounded-pill',
+                'done': 'badge bg-success text-white px-3 py-2 rounded-pill',
+                'failed': 'badge bg-danger text-white px-3 py-2 rounded-pill',
+                'expired': 'badge bg-secondary text-white px-3 py-2 rounded-pill'
+            };
+            return classes[status] || 'badge bg-secondary px-3 py-2 rounded-pill';
         };
 
+        // Helper: Label Status
+        const statusLabel = (status) => {
+            const labels = {
+                'pending': 'Menunggu Pembayaran',
+                'paid': 'Sudah Dibayar',
+                'done': 'Selesai',
+                'failed': 'Gagal',
+                'expired': 'Kadaluarsa'
+            };
+            return labels[status] || status;
+        };
+
+        // Midtrans Pay Method
         const pay = () => {
+            if (!window.snap) {
+                Swal.fire("Error", "Midtrans Payment Page belum siap. Refresh halaman.", "error");
+                return;
+            }
             window.snap.pay(props.transaction.snap_token, {
                 onSuccess: () => {
                     Inertia.post(`/user/account-balances/pay`, {
@@ -264,27 +224,25 @@ export default {
                         payment_method: "automatic_transfer_midtrans",
                     });
                 },
-                onPending: () => {
-                    this.$inertia.reload();
-                },
-                onError: () => {
-                    this.$inertia.visit($page.props.setting.app_url);
-                },
+                onPending: () => { Inertia.reload(); },
+                onError: () => { Inertia.reload(); },
             });
         };
 
-        // return form state and submit method
+        // Format Price
+        const formatPrice = (value) => {
+            if (!value) return "Rp.0";
+            let val = (value / 1).toFixed(0).replace(".", ",");
+            return "Rp." + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        };
+
         return {
             form,
-            submit,
             pay,
+            statusClass,
+            statusLabel,
+            formatPrice
         };
-    },
-    methods: {
-        formatPrice(value) {
-            let val = (value / 1).toFixed(2).replace(".", ",");
-            return "Rp." + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        },
-    },
+    }
 };
 </script>
