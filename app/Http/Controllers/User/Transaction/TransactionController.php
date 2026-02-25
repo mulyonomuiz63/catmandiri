@@ -103,26 +103,59 @@ class TransactionController extends Controller
     {
         $transaction = $this->transactionRepository->find($request->transaction_id);
 
-        if (!$transaction || $transaction->user_id != Auth::id()) return abort('404', 'uppss....');
-
-        $checkTransaction = (object) Transaction::status($transaction->code);
-
-        if (isset($checkTransaction->transaction_status) && $checkTransaction->transaction_status == 'settlement' && $transaction->payment_method == 'automatic_transfer_midtrans') {
-            DB::transaction(function () use ($transaction) {
-                $transaction->transaction_status = 'done';
-                $transaction->expired_date = Carbon::now()->addMonths($transaction->active_period);
-                $transaction->save();
-            });
-
-            UserMemberCategory::create([
-                'transaction_id' => $transaction->id,
-                'user_id' => $transaction->user_id,
-                'category_id' => $transaction->category_id,
-                'description' => $transaction->description,
-                'member_categories' => $transaction->member_categories,
-                'expired_date' => $transaction->expired_date,
-            ]);
+        if (!$transaction || $transaction->user_id != Auth::id()) {
+            return abort('404', 'uppss....');
         }
+
+        // 1. JIKA STATUS SUDAH 'done', ABAIKAN PROSES UPDATE DAN LANGSUNG REDIRECT
+        // Ini mencegah UserMemberCategory dibuat dua kali
+        if ($transaction->transaction_status == 'done') {
+            session()->flash('success', 'Transaksi sudah berhasil diproses.');
+            return redirect()->route('user.transactions.show', $transaction->id);
+        }
+
+        try {
+            $checkTransaction = (object) Transaction::status($transaction->code);
+            $status = $checkTransaction->transaction_status ?? '';
+
+            // 2. Cek status Midtrans (Support settlement & capture untuk kartu kredit)
+            if (in_array($status, ['settlement', 'capture']) && $transaction->payment_method == 'automatic_transfer_midtrans') {
+                
+                DB::transaction(function () use ($transaction) {
+                    // Update Transaksi
+                    $transaction->transaction_status = 'done';
+                    // Gunakan logika period type agar fleksibel (Day/Month)
+                    $transaction->expired_date = $transaction->period_type == 'day' 
+                        ? Carbon::now()->addDays($transaction->active_period) 
+                        : Carbon::now()->addMonths($transaction->active_period);
+                    $transaction->save();
+
+                    // Buat Member Category
+                    UserMemberCategory::create([
+                        'transaction_id'    => $transaction->id,
+                        'user_id'           => $transaction->user_id,
+                        'category_id'       => $transaction->category_id,
+                        'description'       => $transaction->description,
+                        'member_categories' => $transaction->member_categories,
+                        'expired_date'      => $transaction->expired_date,
+                    ]);
+                    
+                    // Hapus yang sudah expired (Opsional, sesuai logika awal Anda)
+                    UserMemberCategory::where('expired_date', '<', Carbon::now())->delete();
+                });
+
+                session()->flash('success', 'Pembayaran berhasil! Layanan Anda telah aktif.');
+            } elseif ($status == 'pending') {
+                session()->flash('info', 'Menunggu pembayaran. Silakan selesaikan tagihan Anda.');
+            } else {
+                session()->flash('error', 'Status pembayaran: ' . strtoupper($status));
+            }
+
+        } catch (\Exception $e) {
+            \Log::error("Pay Sync Error: " . $e->getMessage());
+            session()->flash('error', 'Gagal memverifikasi pembayaran ke server Midtrans.');
+        }
+
         return redirect()->route('user.transactions.show', $transaction->id);
     }
 }
