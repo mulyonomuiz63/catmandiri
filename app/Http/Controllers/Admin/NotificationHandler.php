@@ -51,7 +51,7 @@ class NotificationHandler extends Controller
             $isTopUp = false;
 
             if (!$trx) {
-                $trx = $this->accountBalanceRepository->find($orderId);
+                $trx = $this->accountBalanceRepository->findCode($orderId);
                 $isTopUp = true;
             }
 

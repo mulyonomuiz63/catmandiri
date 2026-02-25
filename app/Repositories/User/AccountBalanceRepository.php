@@ -37,6 +37,11 @@ class AccountBalanceRepository extends BaseRepository implements AccountBalanceI
         return $this->model->with(['user', 'user.student', 'user.student.province', 'user.student.city', 'user.student.district', 'user.student.village',])->find($id);
     }
 
+    public function findCode($id)
+    {
+        return $this->model->with(['user', 'user.student', 'user.student.province', 'user.student.city', 'user.student.district', 'user.student.village',])->where('account_balances.code', $id);
+    }
+
     public function getAllPaginatedWithParams($params, $limit = 10)
     {
         $accountBalances = $this->model->query();
