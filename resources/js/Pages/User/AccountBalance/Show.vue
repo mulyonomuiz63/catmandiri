@@ -36,7 +36,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-8">
+                <div class="col-lg-12">
                     <div class="card border-0 shadow-sm" style="border-radius: 15px;">
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-center mb-4">

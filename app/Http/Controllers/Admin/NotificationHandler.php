@@ -8,6 +8,9 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use App\Models\Setting;
 use App\Models\UserMemberCategory;
+use App\Repositories\User\AccountBalanceRepository;
+use DB;
+use App\Models\User;
 
 class NotificationHandler extends Controller
 {
@@ -17,87 +20,109 @@ class NotificationHandler extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    protected $accountBalanceRepository;
+
+    public function __construct(AccountBalanceRepository $accountBalanceRepository)
+    {
+        $this->accountBalanceRepository = $accountBalanceRepository;
+    }
+
+
     public function __invoke(Request $request)
     {
         try {
-            $message = '';
-
-            $payload = $request->getContent();
-
-            $notification = json_decode($payload);
-
-            $signatureKey = hash("sha512", $notification->order_id. $notification->status_code. $notification->gross_amount. config('services.midtrans.serverKey'));
-
-            if ($notification->signature_key != $signatureKey) {
+            $payload = json_decode($request->getContent());
+            $serverKey = config('services.midtrans.serverKey');
+            
+            // 1. Validasi Signature
+            $signature = hash("sha512", $payload->order_id . $payload->status_code . $payload->gross_amount . $serverKey);
+            if ($payload->signature_key !== $signature) {
                 return response(['message' => 'Invalid signature'], 403);
             }
 
-            $transaction  = $notification->transaction_status;
-            $type = $notification->payment_type;
-            $orderId = $notification->order_id;
-
-            $dataTransaction = Transaction::where('code', $orderId)->first();
+            $status = $payload->transaction_status;
+            $orderId = $payload->order_id;
             $setting = Setting::first();
+            $message = '';
 
-            if ($transaction == 'capture') {
-                if ($type == 'credit_card') {
+            // 2. Cari Data (Transaction atau Account Balance)
+            $trx = Transaction::where('code', $orderId)->first();
+            $isTopUp = false;
 
+            if (!$trx) {
+                $trx = $this->accountBalanceRepository->find($orderId);
+                $isTopUp = true;
+            }
+
+            if (!$trx) return response(['message' => 'Transaction not found'], 404);
+
+            // 3. Mapping Status (Ringkas status ke format internal)
+            $internalStatus = match($status) {
+                'settlement', 'capture' => 'done',
+                'pending'               => 'pending',
+                'deny', 'cancel'        => 'failed',
+                'expire'                => 'expired',
+                default                 => 'pending'
+            };
+
+            // 4. Eksekusi Update Berdasarkan Tipe Transaksi
+            if ($isTopUp) {
+                DB::transaction(function () use ($trx, $internalStatus) {
+                    $trx->update(['transaction_status' => $internalStatus]);
+                    if ($internalStatus === 'done') {
+                        $user = User::find($trx->user_id);
+                        $user->increment('account_balance', $trx->top_up_balance);
+                    }
+                });
+                $amount = $trx->top_up_balance;
+            } else {
+                $trx->update([
+                    'transaction_status' => $internalStatus,
+                    'expired_date' => $internalStatus === 'done' 
+                        ? ($trx->period_type == 'day' ? now()->addDays($trx->active_period) : now()->addMonths($trx->active_period)) 
+                        : $trx->expired_date
+                ]);
+
+                if ($internalStatus === 'done') {
+                    UserMemberCategory::create([
+                        'transaction_id' => $trx->id,
+                        'user_id' => $trx->user_id,
+                        'category_id' => $trx->category_id,
+                        'description' => $trx->description,
+                        'member_categories' => $trx->member_categories,
+                        'expired_date' => $trx->expired_date,
+                    ]);
+                    UserMemberCategory::where('expired_date', '<', now())->delete();
                 }
-
-            } elseif ($transaction == 'settlement') {
-                $dataTransaction->update([
-                    'transaction_status' => 'done',
-                    'expired_date' => $dataTransaction->period_type == 'day' ? Carbon::now()->addDays($dataTransaction->active_period) : Carbon::now()->addMonths($dataTransaction->active_period)
-                ]);
-
-                $message = "*[TRANSAKSI ".$setting->app_name."]*\n\nKode Transaksi: ".$dataTransaction->code."\nTotal Pembayaran: Rp".number_format($dataTransaction->total_payment, 2, ",", ".")."\nketerangan: ".$dataTransaction->description."\n\n*TRANSAKSI BERHASIL DAN SUDAH AKTIF*\n\nterimakasih.";
-
-                UserMemberCategory::create([
-                    'transaction_id' => $dataTransaction->id,
-                    'user_id' => $dataTransaction->user_id,
-                    'category_id' => $dataTransaction->category_id,
-                    'description' => $dataTransaction->description,
-                    'member_categories' => $dataTransaction->member_categories,
-                    'expired_date' => $dataTransaction->expired_date,
-                ]);
-
-                UserMemberCategory::where('expired_date', '<', Carbon::now())->delete();
-
-            } elseif($transaction == 'pending'){
-                $dataTransaction->update([
-                    'transaction_status' => 'pending'
-                ]);
-
-                $message = "*[TRANSAKSI ".$setting->app_name."]*\n\nKode Transaksi: ".$dataTransaction->code."\ntotal Pembayaran: Rp".number_format($dataTransaction->total_payment, 2, ",", ".")."\nketerangan: ".$dataTransaction->description."\n\n*STATUS: SILAKAN UNTUK MELAKUKAN PEMBAYARAN*\n\nterimakasih.";
-
-            } elseif ($transaction == 'deny') {
-                $dataTransaction->update([
-                    'transaction_status' => 'failed'
-                ]);
-
-                $message = "*[TRANSAKSI ".$setting->app_name."]*\n\nKode Transaksi: ".$dataTransaction->code."\nTotal Pembayaran: Rp".number_format($dataTransaction->total_payment, 2, ",", ".")."\nketerangan: ".$dataTransaction->description."\n\n*STATUS: DIBATALKAN, SILAKAN LAKUKAN TRANSAKSI ULANG*\n\nterimakasih.";
-
-            } elseif ($transaction == 'expire') {
-                $dataTransaction->update([
-                    'transaction_status' => 'expired'
-                ]);
-
-                $message = "*[TRANSAKSI ".$setting->app_name."]*\n\nKode Transaksi: ".$dataTransaction->code."\nTotal Pembayaran: Rp".number_format($dataTransaction->total_payment, 2, ",", ".")."\nketerangan: ".$dataTransaction->description."\n\n*STATUS: EXPIRED, SILAKAN LAKUKAN TRANSAKSI ULANG*\n\nterimakasih.";
-            
-            }elseif ($transaction == 'cancel') {
-                $dataTransaction->update([
-                    'transaction_status' => 'failed'
-                ]);
-                
-                $message = "*[TRANSAKSI ".$setting->app_name."]*\n\nKode Transaksi: ".$dataTransaction->code."\nTotal Pembayaran: Rp".number_format($dataTransaction->total_payment, 2, ",", ".")."\nketerangan: ".$dataTransaction->description."\n\n*STATUS: DIBATALKAN, SILAKAN LAKUKAN TRANSAKSI ULANG*\n\nterimakasih.";
-
+                $amount = $trx->total_payment;
             }
 
-            if($dataTransaction->user && $dataTransaction->user->student && $dataTransaction->user->student) {
-                sendWhatsappNotification($dataTransaction->user->student->phone_number, $message);
+            // 5. Susun Pesan WhatsApp
+            $statusText = match($internalStatus) {
+                'done'    => "*TRANSAKSI BERHASIL DAN SUDAH AKTIF*",
+                'pending' => "*STATUS: SILAKAN UNTUK MELAKUKAN PEMBAYARAN*",
+                'failed'  => "*STATUS: DIBATALKAN, SILAKAN LAKUKAN TRANSAKSI ULANG*",
+                'expired' => "*STATUS: EXPIRED, SILAKAN LAKUKAN TRANSAKSI ULANG*",
+                default   => ""
+            };
+
+            $message = "*[TRANSAKSI " . ($setting->app_name ?? 'App') . "]*\n\n"
+                    . "Kode Transaksi: " . $trx->code . "\n"
+                    . "Total Pembayaran: Rp" . number_format($amount, 2, ",", ".") . "\n"
+                    . "Keterangan: " . ($trx->description ?? '-') . "\n\n"
+                    . $statusText . "\n\nTerimakasih.";
+
+            // 6. Kirim Notifikasi (Gunakan variabel $trx yang sudah pasti ada)
+            if (optional($trx->user->student)->phone_number) {
+                sendWhatsappNotification($trx->user->student->phone_number, $message);
             }
+
+            return response(['message' => 'OK']);
+
         } catch (\Exception $e) {
-            \Log::info($e);
+            \Log::error("Midtrans Error: " . $e->getMessage());
+            return response(['message' => 'Server Error'], 500);
         }
     }
 }

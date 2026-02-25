@@ -111,8 +111,8 @@
                                 </div>
 
                                 <div class="mt-4 pt-2">
-                                    <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold shadow-lg" style="border-radius: 15px; padding: 15px; background: #2575fc; border: none;">
-                                        Lanjutkan Pembayaran <i class="bx bx-right-arrow-alt ms-2"></i>
+                                    <button type="submit" class="btn btn-primary btn-sm w-md-auto px-4 py-2">
+                                        Lanjutkan Pembayaran <i class="bx bx-right-arrow-alt"></i>
                                     </button>
                                 </div>
                             </div>

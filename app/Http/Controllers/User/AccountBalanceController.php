@@ -151,19 +151,48 @@ class AccountBalanceController extends Controller
     {
         $transaction = $this->accountBalanceRepository->find($request->transaction_id);
 
-        if (!$transaction || $transaction->user_id != Auth::id()) return abort('404', 'uppss....');
-
-        $checkTransaction = (object) Transaction::status($transaction->code);
-
-        if (isset($checkTransaction->transaction_status) && $checkTransaction->transaction_status == 'settlement' && $transaction->payment_method == 'automatic_transfer_midtrans') {
-            DB::transaction(function () use ($transaction) {
-                $transaction->transaction_status = 'done';
-                $transaction->save();
-                $user = User::find($transaction->user_id);
-                $user->account_balance += $transaction->top_up_balance;
-                $user->save();
-            });
+        if (!$transaction || $transaction->user_id != Auth::id()) {
+            return abort('404', 'Transaksi tidak ditemukan.');
         }
+
+        // 1. Jika di DB status sudah 'done', beri tahu user sudah sukses
+        if ($transaction->transaction_status == 'done') {
+            session()->flash('success', 'Pembayaran Berhasil! Saldo Anda telah bertambah.');
+            return redirect()->route('user.account-balances.index');
+        }
+
+        try {
+            // 2. Cek status ke API Midtrans
+            $checkTransaction = (object) Transaction::status($transaction->code);
+            $status = $checkTransaction->transaction_status ?? '';
+
+            // 3. Jika di Midtrans sudah bayar (settlement/capture)
+            if (in_array($status, ['settlement', 'capture']) && $transaction->payment_method == 'automatic_transfer_midtrans') {
+                
+                DB::transaction(function () use ($transaction) {
+                    // Gunakan lock untuk keamanan saldo
+                    $user = User::lockForUpdate()->find($transaction->user_id);
+                    
+                    $transaction->update(['transaction_status' => 'done']);
+                    $user->increment('account_balance', $transaction->top_up_balance);
+                });
+
+                session()->flash('success', 'Pembayaran Berhasil Dikonfirmasi! Saldo Anda telah diperbarui.');
+            } 
+            // 4. Jika di Midtrans masih pending
+            elseif ($status == 'pending') {
+                session()->flash('info', 'Pembayaran Anda masih dalam status Pending. Silakan selesaikan pembayaran.');
+            } 
+            // 5. Jika di Midtrans gagal/expired
+            else {
+                session()->flash('error', 'Status pembayaran: ' . strtoupper($status) . '. Silakan coba lagi.');
+            }
+
+        } catch (\Exception $e) {
+            \Log::error("Midtrans Pay Sync Error: " . $e->getMessage());
+            session()->flash('error', 'Gagal menghubungkan ke server pembayaran. Silakan cek berkala.');
+        }
+
         return redirect()->route('user.account-balances.index');
     }
 
