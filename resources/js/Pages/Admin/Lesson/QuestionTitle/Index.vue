@@ -32,105 +32,6 @@
                 </div>
             </div>
             <!--end breadcrumb-->
-
-            <div class="card border-top border-0 border-3 border-primary">
-                <div class="card-header">
-                    <div class="d-flex align-items-center">
-                        <div>
-                            <h6 class="mb-0">Filter Data</h6>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card-body">
-                    <!-- Change 'text-center' to 'text-end' -->
-                    <form>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="search">Judul Paket Soal</label>
-                                <input
-                                    type="text"
-                                    v-model="form.search"
-                                    class="form-control"
-                                    id="search"
-                                    placeholder="Cari Berdasarkan Nama Paket Soal...."
-                                />
-                            </div>
-
-                            <div class="col-md-2">
-                                <label for="category">Kategori Peminatan</label>
-                                <select
-                                    @change="lessonCategoryData"
-                                    v-model="form.category_id"
-                                    class="form-control"
-                                >
-                                    <option value="">[ Pilih]</option>
-                                    <option
-                                        v-for="(category, index) in categories"
-                                        :key="index"
-                                        :value="category.id"
-                                    >
-                                        {{ category.name }}
-                                    </option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-2">
-                                <label for="lesson_category_id"
-                                    >Kategori Mata Pelajaran</label
-                                >
-                                <select
-                                    @change="lessonData"
-                                    v-model="form.lesson_category_id"
-                                    class="form-control"
-                                >
-                                    <option value="">[ Pilih ]</option>
-                                    <option
-                                        v-for="lessonCategory in form.lessonCategories"
-                                        :value="lessonCategory.id"
-                                    >
-                                        {{ lessonCategory.name }}
-                                    </option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-2">
-                                <label for="lesson_id">Mata Pelajaran</label>
-                                <select
-                                    v-model="form.lesson_id"
-                                    class="form-select"
-                                >
-                                    <option value="">[ Pilih ]</option>
-                                    <option
-                                        v-for="lesson in form.lessons"
-                                        :value="lesson.id"
-                                    >
-                                        {{ lesson.name }}
-                                    </option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-2">
-                                <label for="end_date">Action</label><br />
-                                <button
-                                    @click.prevent="handleSearch"
-                                    class="btn btn-primary btn-sm me-2"
-                                >
-                                    <i class="bx bx-filter"></i>Filter
-                                </button>
-
-                                <Link
-                                    href="/admin/question-titles"
-                                    class="btn btn-danger btn-sm me-2"
-                                >
-                                    <i class="bx bx-refresh"></i>reset
-                                </Link>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
             <div class="card border-top border-0 border-3 border-primary">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
@@ -138,6 +39,16 @@
                             <h6 class="mb-0">Paket Soal</h6>
                         </div>
                         <div class="ms-auto">
+                            <button 
+                                class="btn btn-outline-primary btn-sm me-2" 
+                                type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#collapseFilter" 
+                                aria-expanded="false" 
+                                aria-controls="collapseFilter"
+                            >
+                                <i class="bx bx-filter-alt"></i> Filter
+                            </button>
                             <Link
                                 href="/admin/question-titles/create"
                                 class="btn btn-primary btn-sm me-2"
@@ -145,6 +56,59 @@
                                 <i class="bx bxs-plus-square"></i>Tambah Data
                             </Link>
                         </div>
+                    </div>
+                </div>
+                <div class="collapse" id="collapseFilter">
+                    <div class="card-body border-bottom bg-light">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0 fw-bold text-primary"><i class='bx bx-search-alt'></i> Pencarian Lanjutan</h6>
+                            <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#collapseFilter" aria-label="Close"></button>
+                        </div>
+                        
+                        <form class="row g-3 align-items-end">
+                            <div class="col-md-3">
+                                <label class="form-label small fw-bold text-muted">Judul Paket Soal</label>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text bg-white"><i class="bx bx-search"></i></span>
+                                    <input type="text" v-model="form.search" class="form-control" placeholder="Cari nama paket...">
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label small fw-bold text-muted">Peminatan</label>
+                                <select @change="lessonCategoryData" v-model="form.category_id" class="form-select form-select-sm">
+                                    <option value="">[ Pilih ]</option>
+                                    <option v-for="(category, index) in categories" :key="index" :value="category.id">{{ category.name }}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label small fw-bold text-muted">Kategori Mapel</label>
+                                <select @change="lessonData" v-model="form.lesson_category_id" class="form-select form-select-sm">
+                                    <option value="">[ Pilih ]</option>
+                                    <option v-for="lessonCategory in form.lessonCategories" :value="lessonCategory.id">{{ lessonCategory.name }}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label small fw-bold text-muted">Mata Pelajaran</label>
+                                <select v-model="form.lesson_id" class="form-select form-select-sm">
+                                    <option value="">[ Pilih ]</option>
+                                    <option v-for="lesson in form.lessons" :value="lesson.id">{{ lesson.name }}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="d-flex gap-2">
+                                    <button @click.prevent="handleSearch" class="btn btn-primary btn-sm flex-fill">
+                                        Terapkan
+                                    </button>
+                                    <Link href="/admin/question-titles" class="btn btn-secondary btn-sm">
+                                        <i class="bx bx-refresh"></i>
+                                    </Link>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <div class="card-body">
